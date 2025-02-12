@@ -213,5 +213,64 @@ describe('Central de Atendimento ao Cliente TAT', () => {
 
     cy.url().should('include', 'privacy.html')
   })
+
+  it('12.md - Exercicio - Verificar que uma mensagem de erro aparece na tela e some após 3 segundos. O teste deve utilizar cy.clock() e cy.tick()', () => {
+    // cy.clock() é utilizado para controlar o tempo do teste. Nesse caso está congelando o relógio do browser
+    cy.clock()
+    cy.get('button[type="submit"]').click()
+    cy.get('span[class="error"]').should('be.visible')
+    // cy.tick() é utilizado para avançar o tempo do teste. Nesse caso está avançando 3 segundos
+    cy.tick(3000)
+    // como a mensagem desaparece 3s após ser exibida, aqui verificamos que ela não está mais visível
+    cy.get('span[class="error"]').should('not.be.visible')
+  })
+
+  Cypress._.times(5, () => {
+    it('12.md - Exercicio - Verificar que uma mensagem de erro aparece na tela e some após 3 segundos. O teste deve utilizar cy.clock() e cy.tick()', () => {
+      cy.clock()
+      cy.get('button[type="submit"]').click()
+      cy.get('span[class="error"]').should('be.visible')
+      cy.tick(3000)
+      cy.get('span[class="error"]').should('not.be.visible')
+    })
+  })
+
+  it('12.md - Exibe e oculta as mensagens de sucesso e erro usando .invoke()', () => {
+    // .invoke('show') e .invoke('hide') são utilizados para exibir e ocultar elementos sem a necessidade de interagir com o fluxo que gera aquele elemento
+
+    cy.get('span[class="success"]').as('success')
+    cy.get('span[class="error"]').as('error')
+
+    // aqui é utilizado para exibir a mensagem de sucesso e verificar se ela está visível e com o texto correto
+    cy.get('@success').should('not.be.visible')
+    cy.get('@success').invoke('show').should('be.visible').and('contain', 'Mensagem enviada com sucesso.')
+    cy.get('@success').invoke('hide').should('not.be.visible')
+
+    // aqui é utilizado para exibir a mensagem de erro e verificar se ela está visível e com o texto correto
+    cy.get('@error').should('not.be.visible')
+    cy.get('@error').invoke('show').should('be.visible').and('contain', 'Valide os campos obrigatórios!')
+    cy.get('@error').invoke('hide').should('not.be.visible')
+  })
+
+  it('12.md - preenche o campo da área de texto usando o comando invoke', () => {
+    // .invoke('val', 'texto') é utilizado para preencher campos de texto sem a necessidade de interagir com o fluxo que gera aquele campo
+
+    cy.get('textarea[id="open-text-area"]').invoke('val', 'Texto de teste')
+
+    cy.get('textarea[id="open-text-area"]').should('have.value', 'Texto de teste')
+  })
+
+  it('12.md - faz uma requisição HTTP', () => {
+    // cy.request() é utilizado para fazer requisições HTTP
+
+    cy.request({
+      method: 'GET',
+      url: 'https://cac-tat-v3.s3.eu-central-1.amazonaws.com/index.html'
+    }).then((response) => {
+      expect(response.status).to.eq(200)
+      expect(response.statusText).to.eq('OK')
+      expect(response.body).to.include('CAC TAT')
+    })
+  })
   
 })
