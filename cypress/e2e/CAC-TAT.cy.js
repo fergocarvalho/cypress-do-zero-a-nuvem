@@ -289,7 +289,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     })
   })
 
-  it.only('13.md - demonstrar que o gato está visivel', () => {
+  it('13.md - demonstrar que o gato está visivel', () => {
     // .should('be.visible') é utilizado para verificar se um elemento está visível
 
     cy.get('span[id="cat"]').invoke('show').should('be.visible')
