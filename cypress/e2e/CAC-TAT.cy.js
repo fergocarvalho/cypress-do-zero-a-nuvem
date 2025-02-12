@@ -18,6 +18,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
   })
 
   it('02.md - preenche os campos obrigatórios e envia o formulário', () => {
+    cy.clock()
     //adiciona cada um dos selectores em um alias próprio
     //o alias é chamado novamente na sequência para fazer uma ação
     //e em seguida o alias é chamado novamente para fazer a verificação
@@ -37,9 +38,12 @@ describe('Central de Atendimento ao Cliente TAT', () => {
 
     cy.get('@success').should('be.visible')
     cy.get('@success').should('have.text', 'Mensagem enviada com sucesso.')
+
+    cy.tick(3000)
   })
 
   it('02.md - exibe mensagem de erro ao submeter o formulário com um email com formatação inválida', () => {
+    cy.clock()
     //aqui foi criada uma variável com um texto longo para ser inserido no campo de texto
     const longText = Cypress._.repeat('qwertyuiop', 10)
 
@@ -54,6 +58,8 @@ describe('Central de Atendimento ao Cliente TAT', () => {
 
     cy.get('@error').should('be.visible')
     cy.get('@error').should('have.text', 'Valide os campos obrigatórios!')
+
+    cy.tick(3000)
   })
 
   it('02.md - Exercício extra 3', () => {
@@ -62,6 +68,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
   })
 
   it('02.md - exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', () => {
+    cy.clock()
     const longText = Cypress._.repeat('qwertyuiop', 10)
 
     cy.get('span[class="error"] strong').as('error')
@@ -76,6 +83,8 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.get('input[id="phone-checkbox"]').should('be.checked')
     cy.get('@error').should('be.visible')
     cy.get('@error').should('have.text', 'Valide os campos obrigatórios!')
+
+    cy.tick(3000)
   })
 
   it('02.md - preenche e limpa os campos nome, sobrenome, email e telefone', () => {
@@ -96,30 +105,37 @@ describe('Central de Atendimento ao Cliente TAT', () => {
   })
 
   it('02.md - exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', () => {
+    cy.clock()
     cy.get('span[class="error"] strong').as('error')
 
     cy.get('button[type="submit"]').click()
 
     cy.get('@error').should('be.visible')
     cy.get('@error').should('have.text', 'Valide os campos obrigatórios!')
+    cy.tick(3000)
   })
 
   it('02.md - envia o formuário com sucesso usando um comando customizado', () => {
+    cy.clock()
     cy.get('span[class="success"] strong').as('success')
     // o comando customizado fillMandatoryFieldsAndSubmit foi adicionado arquivo cypress/support/commands.js
     cy.fillMandatoryFieldsAndSubmit()
 
     cy.get('@success').should('be.visible')
     cy.get('@success').should('have.text', 'Mensagem enviada com sucesso.')
+    cy.tick(3000)
   })
 
   it('02.md - Exercício extra 8', () => {
+    cy.clock()
     cy.get('span[class="success"] strong').as('success')
     
     cy.fillMandatoryFieldsAndSubmit()
 
     cy.get('@success').should('be.visible')
     cy.get('@success').should('have.text', 'Mensagem enviada com sucesso.')
+
+    cy.tick(3000)
   })
 
   it('03.md - seleciona um produto (YouTube) por seu texto', () => {
@@ -271,6 +287,12 @@ describe('Central de Atendimento ao Cliente TAT', () => {
       expect(response.statusText).to.eq('OK')
       expect(response.body).to.include('CAC TAT')
     })
+  })
+
+  it.only('13.md - demonstrar que o gato está visivel', () => {
+    // .should('be.visible') é utilizado para verificar se um elemento está visível
+
+    cy.get('span[id="cat"]').invoke('show').should('be.visible')
   })
   
 })
